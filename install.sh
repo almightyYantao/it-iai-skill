@@ -3,8 +3,8 @@
 #
 # Recommended one-liner for new teammates (idempotent — safe to re-run for upgrades):
 #
-#   rm -rf ~/iai && git clone https://github.com/almightyYantao/it-iai.git ~/iai \
-#     && bash ~/iai/skill/install.sh install
+#   rm -rf ~/iai-skill && git clone https://github.com/almightyYantao/it-iai-skill.git ~/iai-skill \
+#     && bash ~/iai-skill/install.sh install
 #
 # Usage:
 #   ./install.sh install     # idempotent install (recommended)
