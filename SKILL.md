@@ -1,6 +1,6 @@
 ---
 name: iai
-description: iai (爱 AI) 一键部署。把当前项目打包、上传、构建并部署到公司内网子域名。当用户说 `deploy +push` / `deploy +status` / `deploy +logs` / `deploy +list` / `deploy +login` / `deploy +share` 时使用。Skill 会扫描 cwd 并通过 Control Plane API 完成部署，全程不需要用户写 Dockerfile / k8s manifest。项目名修改、HTTPS 开关、自定义域名、IP 访问控制都在 Web 后台做。
+description: iai (爱 AI) 一键部署。把当前项目打包、上传、构建并部署到公司内网子域名。当用户说 `deploy +push` / `deploy +status` / `deploy +logs` / `deploy +list` / `deploy +login` / `deploy +share` / `deploy +api-token` / `deploy +path-rule` 时使用。Skill 会扫描 cwd 并通过 Control Plane API 完成部署，全程不需要用户写 Dockerfile / k8s manifest。项目名修改、HTTPS 开关、自定义域名、IP 访问控制都在 Web 后台做。
 ---
 
 # iai Skill
@@ -16,6 +16,8 @@ description: iai (爱 AI) 一键部署。把当前项目打包、上传、构建
 | `deploy +logs [-f]` | 取构建/运行日志 |
 | `deploy +list` | 列出我**自己**的项目（owner 或 collaborator） |
 | `deploy +share list / add EMAIL / remove EMAIL` | 协作者管理（owner 或 admin 才能改） |
+| `deploy +api-token show / regenerate / revoke` | 项目级 API token —— 给 token 模式的路径规则用 |
+| `deploy +path-rule list / add PREFIX MODE / remove PREFIX` | 按 URL 前缀豁免 SSO（`MODE` = `no_auth` 或 `token`，最长前缀优先） |
 
 ## 走 CLI 还是走 Web 后台
 
@@ -24,6 +26,8 @@ description: iai (爱 AI) 一键部署。把当前项目打包、上传、构建
 | 部署 / 重新部署 | `deploy +push`（CLI） |
 | 查状态 / 日志 / 项目列表 | CLI（`+status` / `+logs` / `+list`） |
 | 协作者增删 | CLI（`+share`）或 Web 后台「协作者」面板 |
+| API token 增删 | CLI（`+api-token`）或 Web 后台「API 路径例外」面板 |
+| 按路径前缀豁免 SSO / 改 Token 鉴权 | CLI（`+path-rule`）或 Web 后台「API 路径例外」面板 |
 | **改项目名** | **Web 后台 → 项目详情页「项目名称」面板**（slug 不变，链接还能用） |
 | **开 / 关 HTTPS** | **Web 后台 → 项目详情页「HTTPS」面板**（cert-manager 自动签发 LE 证书，约 30 秒） |
 | **加自定义域名 / 自定义子域** | **Web 后台 → 项目详情页「自定义域名」面板**（每个项目默认上限 1 个，含子域和买的域名） |
@@ -117,6 +121,9 @@ bash <skill-root>/scripts/logs.sh   [SLUG] [-f] [-n N]
 bash <skill-root>/scripts/list.sh
 bash <skill-root>/scripts/login.sh
 bash <skill-root>/scripts/whoami.sh
+bash <skill-root>/scripts/share.sh      list | add EMAIL | remove EMAIL
+bash <skill-root>/scripts/api-token.sh  show | regenerate | revoke
+bash <skill-root>/scripts/path-rule.sh  list | add PREFIX MODE | remove PREFIX
 ```
 
 **注意**：Skill 不要自己手动拼 curl 调 API —— 一切走脚本，便于 dev 阶段一致维护。
